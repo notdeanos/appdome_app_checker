@@ -26,9 +26,6 @@ Usage: python appdome_app_checker.py [APP_FILE]
 Note: Ensure that the required dependencies (frida-ios-dump, jadx, unzip, plutil, aapt, strings) are installed.
 
 """
-# Delta
-
-
 import subprocess
 import json
 import sys
@@ -127,9 +124,9 @@ def check_android_permissions(app_binary):
     apk = APK(app_binary)
     permissions = apk.get_permissions()
     if permissions:
-        print("Permissions:")
+        print("I found these permissions:")
         for permission in permissions:
-            print("-", permission)
+            print(" -", permission)
 
 # Check if the app is debuggable (iOS)
 def check_debuggable_ios(app_binary):
@@ -205,7 +202,7 @@ def check_frida_detection_ios(app_binary):
 def check_frida_detection_android(app_binary):
     result = subprocess.check_output(['strings', app_binary])
     result_str = result.decode().lower()
-    if 'frida' in result_str:
+    if 'frida' in result_str or "Frida" in result_str:
         print("The Android app has signs of Frida detection.")
     else:
         print("The Android app does not have signs of Frida detection.")
@@ -214,7 +211,7 @@ def check_frida_detection_android(app_binary):
 def check_ssl_pinning_ios(app_binary):
     result = subprocess.check_output(['strings', app_binary])
     result_str = result.decode().lower()
-    if 'sslpinning' in result_str or 'ssl pinning' in result_str:
+    if 'sslpinning' in result_str or 'ssl pinning' in result_str or "Pinning" in result_str:
         print("The iOS app has signs of SSL/TLS pinning.")
     else:
         print("The iOS app does not have signs of SSL/TLS pinning.")
@@ -252,15 +249,15 @@ def check_magisk_detection(app_binary):
     manifest_data = apk.get_android_manifest_xml()
     magisk_detection = 'com.topjohnwu.magisk' in manifest_data
     if magisk_detection:
-        print("Magisk Detection: Detected")
+        print("The Android app has signs of Magisk Detection")
     else:
-        print("Magisk Detection: Not Detected")
+        print("The Android app does not have signs of Magisk Detection.")
 
 # Check for Zygisk detection (Android)
 def check_zygisk_detection_android(app_binary):
     result = subprocess.check_output(['strings', app_binary])
     result_str = result.decode().lower()
-    if 'zygisk' in result_str:
+    if 'zygisk' in result_str or "Zygisk" in result_str:
         print("The Android app has signs of Zygisk detection.")
     else:
         print("The Android app does not have signs of Zygisk detection.")
