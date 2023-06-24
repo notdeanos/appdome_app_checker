@@ -34,6 +34,10 @@ from androguard.core.bytecodes.apk import APK
 from androguard.core.bytecodes.dvm import DalvikVMFormat
 from androguard.core.analysis.analysis import Analysis
 
+# Set the ANDROID_HOME environment variable
+android_sdk_path = os.path.expanduser('~/Library/Android/sdk')  # Path to Android SDK directory
+os.environ['ANDROID_HOME'] = android_sdk_path
+
 # Check if a binary is available in the system PATH
 def is_binary_available(binary):
     try:
